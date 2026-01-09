@@ -20,11 +20,13 @@ public class StageOneService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private StageZeroService stageZeroService;
+    private final StageZeroService stageZeroService;
+    private final MenuService menuService;
 
-    @Autowired
-    private MenuService menuService;
+    public StageOneService(MenuService menuService, StageZeroService stageZeroService) {
+        this.menuService = menuService;
+        this.stageZeroService = stageZeroService;
+    }
 
     // Главное меню, этап 1
     public SendMessage showShelterInfoMenu(User user) {
@@ -346,7 +348,6 @@ public class StageOneService {
         userService.saveUser(user);
 
         // Здесь логика уведомления волонтеров
-
         return SendMessage.builder()
                 .chatId(user.getChatId())
                 .text("""

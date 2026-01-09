@@ -15,7 +15,6 @@ import java.util.Optional;
 @Repository
 public interface ProbationRepository extends JpaRepository<ProbationPeriod, Long> {
     Optional<ProbationPeriod> findByUser(User user);
-    Optional<ProbationPeriod> findByUserId(Long userId);
     List<ProbationPeriod> findByStatus(ProbationStatus status);
     List<ProbationPeriod> findByStatusIn(List<ProbationStatus> statuses);
     List<ProbationPeriod> findByEndDate(LocalDate endDate);

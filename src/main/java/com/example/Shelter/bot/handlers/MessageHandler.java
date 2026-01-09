@@ -1,5 +1,6 @@
 package com.example.Shelter.bot.handlers;
 
+import com.example.Shelter.bot.handlers.stages.StageThreeService;
 import com.example.Shelter.model.User;
 import com.example.Shelter.model.BotState;
 import com.example.Shelter.service.UserService;
@@ -25,9 +26,9 @@ public class MessageHandler {
     private StageOneService stageOneService;
 
     @Autowired
-    private AbsSender absSender;
+    private StageThreeService stageThreeService;
 
-    public void handleMessage(Message message) throws TelegramApiException {
+    public void handleMessage(Message message, AbsSender absSender) throws TelegramApiException {
         Long chatId = message.getChatId();
         String text = message.getText();
         User user = userService.getOrCreateUser(chatId, message.getFrom());
@@ -49,7 +50,7 @@ public class MessageHandler {
                 break;
 
             case MAIN_MENU:
-                handleMainMenuChoice(user, text);
+                handleMainMenuChoice(user, text, absSender);
                 break;
 
             case SHELTER_INFO_MENU:
@@ -66,7 +67,7 @@ public class MessageHandler {
         }
     }
 
-    private void handleMainMenuChoice(User user, String text) throws TelegramApiException {
+    private void handleMainMenuChoice(User user, String text, AbsSender absSender) throws TelegramApiException {
         SendMessage response;
 
         switch (text) {
@@ -93,6 +94,10 @@ public class MessageHandler {
                         .chatId(user.getChatId())
                         .text("Волонтер уведомлен. Ожидайте ответа.")
                         .build();
+                break;
+
+            case "Посмотреть мои отчеты":
+                response = stageThreeService.showUserReports1(user);
                 break;
 
             default:

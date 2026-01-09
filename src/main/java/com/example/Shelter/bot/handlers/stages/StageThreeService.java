@@ -1,6 +1,7 @@
 package com.example.Shelter.bot.handlers.stages;
 
 import com.example.Shelter.model.*;
+import com.example.Shelter.service.MenuService;
 import com.example.Shelter.service.ProbationService;
 import com.example.Shelter.service.ReportService;
 import com.example.Shelter.service.UserService;
@@ -19,6 +20,9 @@ import java.util.Optional;
 
 @Service
 public class StageThreeService {
+
+    @Autowired
+    private MenuService menuService;
 
     @Autowired
     private UserService userService;
@@ -124,7 +128,7 @@ public class StageThreeService {
             case "Отправить отчет за другую дату":
                 return askForReportDate(user);
             case "Посмотреть мои отчеты":
-                return showUserReports(user);
+                return showUserReports1(user);
             case "Статус испытательного срока":
                 return showProbationStatus(user);
             case "Позвать волонтера":
@@ -209,7 +213,7 @@ public class StageThreeService {
 
     // Обработка фото отчета
     public SendMessage handleReportPhoto(User user, String photoId) {
-        LocalDate reportDate = LocalDate.now(); // В реальности нужно хранить дату отчета в контексте пользователя
+        LocalDate reportDate = LocalDate.now();
 
         Report report = reportService.getOrCreateReport(user, reportDate);
         report.setPhotoPath(photoId);
@@ -332,7 +336,7 @@ public class StageThreeService {
     }
 
     // Показ отчетов пользователя
-    private SendMessage showUserReports(User user) {
+    public SendMessage showUserReports(User user) {
         List<Report> reports = reportService.getUserReports(user);
 
         if (reports.isEmpty()) {
@@ -456,8 +460,6 @@ public class StageThreeService {
 
     // Уведомление волонтеров о новом отчете
     private void notifyVolunteersAboutNewReport(Report report) {
-        // Реализация уведомления волонтеров
-        // Например, отправка сообщений в чат волонтеров
     }
 
     // Вызов волонтера
@@ -476,4 +478,49 @@ public class StageThreeService {
         StageZeroService stageZero = new StageZeroService();
         return stageZero.showMainMenu(user);
     }
+
+    public SendMessage showUserReports1(User user) {
+        List<Report> reports = reportService.findAllByUser(user);
+
+        if (reports.isEmpty()) {
+            return SendMessage.builder()
+                    .chatId(user.getChatId())
+                    .text("У вас пока нет отправленных отчетов.")
+                    .build();
+        }
+
+        StringBuilder message = new StringBuilder();
+        message.append("*Ваши отчеты:*\n\n");
+
+        for (Report report : reports) {
+            String statusEmoji = switch (report.getStatus()) {
+                case PENDING -> "wait";
+                case APPROVED -> "ok";
+                case NEEDS_IMPROVEMENT -> "attention";
+                case LATE -> "late";
+                case MISSING -> "error";
+            };
+            message.append(String.format("""
+                *%s %s*
+                Статус: %s
+                Фото: %s
+                %s
+                
+                """,
+                    report.getReportDate(),
+                    statusEmoji,
+                    report.getStatus(),
+                    report.getPhotoPath() != null ? "ok" : "error",
+                    report.getVolunteerFeedback() != null ?
+                            "Комментарий: " + report.getVolunteerFeedback() : ""
+            ));
+        }
+
+        return SendMessage.builder()
+                .chatId(user.getChatId())
+                .text(message.toString())
+                .parseMode("Markdown")
+                .build();
+    }
+
 }
