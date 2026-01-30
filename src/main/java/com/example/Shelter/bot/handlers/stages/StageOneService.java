@@ -30,10 +30,11 @@ public class StageOneService {
 
     // Главное меню, этап 1
     public SendMessage showShelterInfoMenu(User user) {
-        user.setCurrentState(BotState.SHELTER_INFO_MENU);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
-        String shelterType = user.getChosenShelter() == ShelterType.CAT_SHELTER ? "кошачьего" : "собачьего";
+        String selected = user.getSelectedShelter();
+        String shelterType = "CAT".equals(selected) ? "кошачьего" : "собачьего";
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -108,11 +109,11 @@ public class StageOneService {
 
     // Информация о приюте
     private SendMessage showAboutShelter(User user) {
-        user.setCurrentState(BotState.SHELTER_ABOUT);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         String info = "";
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             info = """
                 *Приют для кошек "Мурлыка"*
                 
@@ -157,11 +158,11 @@ public class StageOneService {
 
     // Расписание и адрес
     private SendMessage showScheduleAndAddress(User user) {
-        user.setCurrentState(BotState.SHELTER_SCHEDULE);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         String info = "";
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             info = """
                 *Адрес кошачьего приюта:*
                 г. Москва, ул. Кошачья, д. 15
@@ -204,11 +205,11 @@ public class StageOneService {
 
     // Контакты охраны для пропуска
     private SendMessage showSecurityContacts(User user) {
-        user.setCurrentState(BotState.SHELTER_SECURITY_CONTACTS);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         String info = "";
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             info = """
                 *Оформление пропуска на территорию кошачьего приюта*
                 
@@ -250,11 +251,11 @@ public class StageOneService {
 
     // Техника безопасности
     private SendMessage showSafetyRules(User user) {
-        user.setCurrentState(BotState.SHELTER_SAFETY_RULES);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         String info = "";
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             info = """
                 *Правила безопасности в кошачьем приюте*
                 
@@ -313,7 +314,7 @@ public class StageOneService {
 
     // Запрос контактных данных
     private SendMessage askForContactInfo(User user) {
-        user.setCurrentState(BotState.AWAITING_CONTACT_INFO);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         return SendMessage.builder()
@@ -333,7 +334,7 @@ public class StageOneService {
     // Обработка полученных контактов
     public SendMessage saveContactInfo(User user, String contactInfo) {
         // Здесь сохраняем контакты в базу
-        user.setCurrentState(BotState.SHELTER_INFO_MENU);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         return SendMessage.builder()
@@ -344,7 +345,7 @@ public class StageOneService {
 
     // Вызов волонтера
     private SendMessage callVolunteer(User user) {
-        user.setCurrentState(BotState.AWAITING_VOLUNTEER);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
 
         // Здесь логика уведомления волонтеров
@@ -363,7 +364,7 @@ public class StageOneService {
 
     // Назад в главное меню
     private SendMessage goBackToMainMenu(User user) {
-        user.setCurrentState(BotState.MAIN_MENU);
+        user.setBotState(BotState.SHELTER_INFO_MENU);
         userService.saveUser(user);
         return menuService.showMainMenu(user);
     }

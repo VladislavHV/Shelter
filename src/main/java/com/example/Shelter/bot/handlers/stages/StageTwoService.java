@@ -24,10 +24,10 @@ public class StageTwoService {
 
     // Главное меню Этапа 2
     public SendMessage showAdoptionInfoMenu(User user) {
-        user.setCurrentState(BotState.ADOPTION_INFO_MENU);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
-        boolean isCatShelter = user.getChosenShelter() == ShelterType.CAT_SHELTER;
+        boolean isCatShelter = "CAT".equals(user.getSelectedShelter());
         String animalType = isCatShelter ? "кошку/кота" : "собаку";
 
         List<KeyboardRow> keyboard = new ArrayList<>();
@@ -134,11 +134,11 @@ public class StageTwoService {
 
     // Правила знакомства
     private SendMessage showMeetingRules(User user) {
-        user.setCurrentState(BotState.MEETING_RULES);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         String info = "";
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             info = """
                 *Правила знакомства с кошкой*
                 
@@ -197,7 +197,7 @@ public class StageTwoService {
 
     // Необходимые документы
     private SendMessage showRequiredDocuments(User user) {
-        user.setCurrentState(BotState.REQUIRED_DOCUMENTS);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         String info = """
@@ -234,11 +234,11 @@ public class StageTwoService {
 
     // Правила транспортировки
     private SendMessage showTransportRules(User user) {
-        user.setCurrentState(BotState.TRANSPORT_RULES);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         String info = "";
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             info = """
                 *Транспортировка кошки*
                 
@@ -297,10 +297,10 @@ public class StageTwoService {
 
     // Подготовка дома для щенка/котенка
     private SendMessage showPuppyHomePrep(User user) {
-        user.setCurrentState(BotState.PUPPY_HOME_PREP);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
-        boolean isCat = user.getChosenShelter() == ShelterType.CAT_SHELTER;
+        boolean isCat = "CAT".equals(user.getSelectedShelter());
         String animal = isCat ? "котенка" : "щенка";
         String litter = isCat ? "лоток с наполнителем" : "пеленки";
 
@@ -347,10 +347,10 @@ public class StageTwoService {
 
     // Подготовка дома для взрослого животного
     private SendMessage showAdultHomePrep(User user) {
-        user.setCurrentState(BotState.ADULT_HOME_PREP);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
-        boolean isCat = user.getChosenShelter() == ShelterType.CAT_SHELTER;
+        boolean isCat = "CAT".equals(user.getSelectedShelter());
         String animal = isCat ? "взрослой кошки" : "взрослой собаки";
 
         String info = String.format("""
@@ -396,7 +396,7 @@ public class StageTwoService {
 
     // Подготовка дома для животного с ограниченными возможностями
     private SendMessage showDisabledHomePrep(User user) {
-        user.setCurrentState(BotState.DISABLED_HOME_PREP);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         String info = """
@@ -444,14 +444,15 @@ public class StageTwoService {
 
     // Советы кинолога (только для собак)
     private SendMessage showDogTrainerTips(User user) {
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
-            return SendMessage.builder()
-                    .chatId(user.getChatId())
-                    .text("Эта информация доступна только для собачьего приюта.")
-                    .build();
+        if ("CAT".equals(user.getSelectedShelter())) {
+                return SendMessage.builder()
+                        .chatId(user.getChatId())
+                        .text("Эта информация доступна только для собачьего приюта.")
+                        .build();
         }
 
-        user.setCurrentState(BotState.DOG_TRAINER_TIPS);
+
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         String info = """
@@ -497,14 +498,14 @@ public class StageTwoService {
 
     // Рекомендации кинологов (только для собак)
     private SendMessage showDogTrainerRecommendations(User user) {
-        if (user.getChosenShelter() == ShelterType.CAT_SHELTER) {
+        if ("CAT".equals(user.getSelectedShelter())) {
             return SendMessage.builder()
                     .chatId(user.getChatId())
                     .text("Эта информация доступна только для собачьего приюта.")
                     .build();
         }
 
-        user.setCurrentState(BotState.DOG_TRAINER_RECOMMENDATIONS);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         String info = """
@@ -548,10 +549,10 @@ public class StageTwoService {
 
     // Причины отказа
     private SendMessage showRejectionReasons(User user) {
-        user.setCurrentState(BotState.REJECTION_REASONS);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
-        boolean isCat = user.getChosenShelter() == ShelterType.CAT_SHELTER;
+        boolean isCat = "CAT".equals(user.getSelectedShelter());
         String animal = isCat ? "кошку" : "собаку";
 
         String info = String.format("""
@@ -605,7 +606,7 @@ public class StageTwoService {
 
     // Запрос контактов для усыновления
     private SendMessage askForAdoptionContacts(User user) {
-        user.setCurrentState(BotState.AWAITING_ADOPTION_CONTACTS);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         return SendMessage.builder()
@@ -629,7 +630,7 @@ public class StageTwoService {
 
     // Вызов волонтера
     private SendMessage callVolunteer(User user) {
-        user.setCurrentState(BotState.AWAITING_VOLUNTEER);
+        user.setBotState(BotState.ADOPTION_INFO_MENU);
         userService.saveUser(user);
 
         return SendMessage.builder()

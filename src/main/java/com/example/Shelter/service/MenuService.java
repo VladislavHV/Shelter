@@ -13,7 +13,8 @@ import java.util.List;
 public class MenuService {
 
     public SendMessage showMainMenu(User user) {
-        String shelterName = user.getChosenShelter().getDescription();
+        String shelterCode = user.getSelectedShelter();
+        String shelterName = getShelterDescription(shelterCode);
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -46,4 +47,19 @@ public class MenuService {
                 .replyMarkup(replyMarkup)
                 .build();
     }
+
+    private String getShelterDescription(String shelterCode) {
+        if (shelterCode == null) {
+            return "приют";
+        }
+        switch (shelterCode) {
+            case "CAT":
+                return "кошачий приют";
+            case "DOG":
+                return "собачий приют";
+            default:
+                return "приют";
+        }
+    }
+
 }

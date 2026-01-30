@@ -40,4 +40,14 @@ public enum BotState {
     AWAITING_VOLUNTEER_FEEDBACK,
 
     AWAITING_VOLUNTEER,
+
+    STAGE_ZERO,      // Начало, выбор приюта
+    STAGE_ONE,       // Информация о приюте
+    STAGE_TWO,       // Процесс усыновления
+    STAGE_THREE,     // Отправка отчетов
+    AWAITING_PHOTO,  // Ожидание фото для отчета
+    AWAITING_CONTACT,// Ожидание контактных данных
+
+    ADOPTION_PROCESS,    // Процесс усыновления
+    AWAITING_REPORT,     // Ожидание отчета
 }

@@ -20,7 +20,7 @@ public class StageZeroService {
     private UserService userService;
 
     public SendMessage handleStart(User user) {
-        user.setCurrentState(BotState.CHOOSE_SHELTER);
+        user.setBotState(BotState.STAGE_ZERO);
         userService.saveUser(user);
 
         return createShelterChoiceMessage(user.getChatId());
@@ -50,8 +50,8 @@ public class StageZeroService {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow row = new KeyboardRow();
-        row.add(ShelterType.CAT_SHELTER.getFullName());
-        row.add(ShelterType.DOG_SHELTER.getFullName());
+        row.add(ShelterType.CAT.getFullName());
+        row.add(ShelterType.DOG.getFullName());
         keyboard.add(row);
 
         return ReplyKeyboardMarkup.builder()
@@ -65,12 +65,12 @@ public class StageZeroService {
     public SendMessage handleShelterChoice(User user, String text) {
         ShelterType chosenShelter = null;
 
-        if (text.contains(ShelterType.CAT_SHELTER.getDescription()) ||
+        if (text.contains(ShelterType.CAT.getDescription()) ||
                 text.contains("кош") || text.contains("кот")) {
-            chosenShelter = ShelterType.CAT_SHELTER;
-        } else if (text.contains(ShelterType.DOG_SHELTER.getDescription()) ||
+            chosenShelter = ShelterType.CAT;
+        } else if (text.contains(ShelterType.DOG.getDescription()) ||
                 text.contains("собак") || text.contains("пёс")|| text.contains("пес")) {
-            chosenShelter = ShelterType.DOG_SHELTER;
+            chosenShelter = ShelterType.DOG;
         }
 
         if (chosenShelter == null) {
@@ -81,8 +81,8 @@ public class StageZeroService {
                     .build();
         }
 
-        user.setChosenShelter(chosenShelter);
-        user.setCurrentState(BotState.MAIN_MENU);
+        user.setSelectedShelter("CAT");
+        user.setBotState(BotState.STAGE_ONE);
         userService.saveUser(user);
 
         return showMainMenu(user);
@@ -90,7 +90,7 @@ public class StageZeroService {
 
     // Главное меню после выбора приюта
     public SendMessage showMainMenu(User user) {
-        String shelterName = user.getChosenShelter().getDescription();
+        String shelterName = user.getSelectedShelter();
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -116,7 +116,7 @@ public class StageZeroService {
                 .build();
 
         String messageText = String.format("Вы выбрали: %s\n\nЧто вас интересует?",
-                user.getChosenShelter().getFullName());
+                user.getSelectedShelter());
 
         return SendMessage.builder()
                 .chatId(user.getChatId())

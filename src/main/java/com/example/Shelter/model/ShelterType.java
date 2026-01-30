@@ -2,20 +2,20 @@ package com.example.Shelter.model;
 
 public enum ShelterType {
 
-    CAT_SHELTER,
-    DOG_SHELTER;
+    CAT,
+    DOG;
 
     public String getDescription() {
         return switch (this) {
-            case CAT_SHELTER -> "Приют для кошек";
-            case DOG_SHELTER -> "Приют для собак";
+            case CAT -> "Приют для кошек";
+            case DOG -> "Приют для собак";
         };
     }
 
     public String getFullName() {
         return switch (this) {
-            case CAT_SHELTER -> "Приют для кошек";
-            case DOG_SHELTER -> "Приют для собак";
+            case CAT -> "Приют для кошек";
+            case DOG -> "Приют для собак";
         };
     }
 

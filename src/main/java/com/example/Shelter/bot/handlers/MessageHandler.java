@@ -1,11 +1,11 @@
 package com.example.Shelter.bot.handlers;
 
-import com.example.Shelter.bot.handlers.stages.StageThreeService;
-import com.example.Shelter.model.User;
-import com.example.Shelter.model.BotState;
-import com.example.Shelter.service.UserService;
-import com.example.Shelter.bot.handlers.stages.StageZeroService;
 import com.example.Shelter.bot.handlers.stages.StageOneService;
+import com.example.Shelter.bot.handlers.stages.StageThreeService;
+import com.example.Shelter.bot.handlers.stages.StageZeroService;
+import com.example.Shelter.model.BotState;
+import com.example.Shelter.model.User;
+import com.example.Shelter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -28,12 +28,23 @@ public class MessageHandler {
     @Autowired
     private StageThreeService stageThreeService;
 
+    public MessageHandler() {
+    }
+
+    @Autowired
+    public MessageHandler(StageOneService stageOneService, StageThreeService stageThreeService, StageZeroService stageZeroService, UserService userService) {
+        this.stageOneService = stageOneService;
+        this.stageThreeService = stageThreeService;
+        this.stageZeroService = stageZeroService;
+        this.userService = userService;
+    }
+
     public void handleMessage(Message message, AbsSender absSender) throws TelegramApiException {
         Long chatId = message.getChatId();
         String text = message.getText();
         User user = userService.getOrCreateUser(chatId, message.getFrom());
 
-        BotState currentState = user.getCurrentState();
+        BotState currentState = user.getBotState();
 
         // Обработка команды /start
         if ("/start".equals(text)) {

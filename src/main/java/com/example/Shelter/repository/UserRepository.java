@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Обновляем состояние пользователя
     @Modifying
-    @Query("UPDATE User u SET u.currentState = :newState WHERE u.chatId = :chatId")
+    @Query("UPDATE User u SET u.botState = :newState WHERE u.chatId = :chatId")
     void updateUserState(@Param("chatId") Long chatId, @Param("newState") BotState newState);
 
     // Проверяем существование пользователя по chatId

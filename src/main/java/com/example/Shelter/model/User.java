@@ -1,14 +1,19 @@
 package com.example.Shelter.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @Column(name = "chat_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "telegram_id", unique = true, nullable = false)
+    private Long telegramId;
+
+    @Column(name = "chat_id", nullable = false)
     private Long chatId;
 
     @Column(name = "first_name")
@@ -17,91 +22,144 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "user_name")
+    private String userName;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "chosen_shelter")
-    private ShelterType chosenShelter;
+    @Column(name = "bot_state")
+    private BotState botState = BotState.STAGE_ZERO;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "current_state")
-    private BotState currentState;
+    @Column(name = "selected_shelter")
+    private String selectedShelter; // "CAT", "DOG"
 
-    @Column(name = "registration_date")
-    private LocalDateTime registrationDate;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-    // Конструктор по умолчанию
-    public User() {}
+    @Column(name = "email")
+    private String email;
 
-    // Конструктор с параметрами
-    public User(Long chatId, String firstName, String lastName,
-                String username, ShelterType chosenShelter,
-                BotState currentState) {
+    @Column(name = "has_active_adoption")
+    private Boolean hasActiveAdoption = false;
+
+    @Column(name = "current_pet_id")
+    private Long currentPetId;
+
+    // ВАЖНО: конструктор по умолчанию
+    public User() {
+    }
+
+    // Опционально: конструктор со всеми полями
+    public User(Long id, Long telegramId, Long chatId, String firstName,
+                String lastName, String userName, BotState botState,
+                String selectedShelter, String phoneNumber, String email,
+                Boolean hasActiveAdoption, Long currentPetId) {
+        this.id = id;
+        this.telegramId = telegramId;
         this.chatId = chatId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
-        this.chosenShelter = chosenShelter;
-        this.currentState = currentState;
-        this.registrationDate = LocalDateTime.now();
+        this.userName = userName;
+        this.botState = botState;
+        this.selectedShelter = selectedShelter;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.hasActiveAdoption = hasActiveAdoption;
+        this.currentPetId = currentPetId;
     }
 
-    // Геттеры
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getTelegramId() {
+        return telegramId;
+    }
+
+    public void setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
+    }
+
     public Long getChatId() {
         return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public ShelterType getChosenShelter() {
-        return chosenShelter;
-    }
-
-    public BotState getCurrentState() {
-        return currentState;
-    }
-
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
-
-    // Сеттеры
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setChosenShelter(ShelterType chosenShelter) {
-        this.chosenShelter = chosenShelter;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public void setCurrentState(BotState currentState) {
-        this.currentState = currentState;
+    public BotState getBotState() {
+        return botState;
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setBotState(BotState botState) {
+        this.botState = botState;
+    }
+
+    public String getSelectedShelter() {
+        return selectedShelter;
+    }
+
+    public void setSelectedShelter(String selectedShelter) {
+        this.selectedShelter = selectedShelter;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Boolean getHasActiveAdoption() {
+        return hasActiveAdoption;
+    }
+
+    public void setHasActiveAdoption(Boolean hasActiveAdoption) {
+        this.hasActiveAdoption = hasActiveAdoption;
+    }
+
+    public Long getCurrentPetId() {
+        return currentPetId;
+    }
+
+    public void setCurrentPetId(Long currentPetId) {
+        this.currentPetId = currentPetId;
     }
 }
