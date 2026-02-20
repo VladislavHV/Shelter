@@ -35,4 +35,8 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     // Отчеты без текстового описания
     @Query("SELECT r FROM Report r WHERE r.diet IS NULL OR r.diet = '' OR r.wellbeing IS NULL OR r.wellbeing = '' OR r.behaviorChanges IS NULL OR r.behaviorChanges = ''")
     List<Report> findIncompleteReports();
+
+    List<Report> findAll();
+
+    long countByStatus(ReportStatus status);
 }

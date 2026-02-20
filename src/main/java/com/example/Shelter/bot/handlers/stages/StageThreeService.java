@@ -53,7 +53,7 @@ public class StageThreeService {
                     .build();
         }
 
-        user.setCurrentState(BotState.REPORT_MENU);
+        user.setBotState(BotState.REPORT_MENU);
         userService.saveUser(user);
 
         ProbationPeriod prob = probation.get();
@@ -145,7 +145,7 @@ public class StageThreeService {
 
     // Начало заполнения формы отчета
     private SendMessage startReportForm(User user, LocalDate reportDate) {
-        user.setCurrentState(BotState.REPORT_FORM);
+        user.setBotState(BotState.REPORT_FORM);
         userService.saveUser(user);
 
         // Проверяем существующий отчет
@@ -219,7 +219,7 @@ public class StageThreeService {
         report.setPhotoPath(photoId);
         reportService.saveReport(report);
 
-        user.setCurrentState(BotState.AWAITING_REPORT_DIET);
+        user.setBotState(BotState.AWAITING_REPORT_DIET);
         userService.saveUser(user);
 
         return SendMessage.builder()
@@ -249,7 +249,7 @@ public class StageThreeService {
         report.setDiet(diet);
         reportService.saveReport(report);
 
-        user.setCurrentState(BotState.AWAITING_REPORT_WELLBEING);
+        user.setBotState(BotState.AWAITING_REPORT_WELLBEING);
         userService.saveUser(user);
 
         return SendMessage.builder()
@@ -280,7 +280,7 @@ public class StageThreeService {
         report.setWellbeing(wellbeing);
         reportService.saveReport(report);
 
-        user.setCurrentState(BotState.AWAITING_REPORT_BEHAVIOR);
+        user.setBotState(BotState.AWAITING_REPORT_BEHAVIOR);
         userService.saveUser(user);
 
         return SendMessage.builder()
@@ -313,7 +313,7 @@ public class StageThreeService {
         report.setCreatedAt(LocalDateTime.now());
         reportService.saveReport(report);
 
-        user.setCurrentState(BotState.REPORT_MENU);
+        user.setBotState(BotState.REPORT_MENU);
         userService.saveUser(user);
 
         // Отправляем уведомление волонтерам
@@ -464,7 +464,7 @@ public class StageThreeService {
 
     // Вызов волонтера
     private SendMessage callVolunteer(User user) {
-        user.setCurrentState(BotState.AWAITING_VOLUNTEER);
+        user.setBotState(BotState.AWAITING_VOLUNTEER);
         userService.saveUser(user);
 
         return SendMessage.builder()

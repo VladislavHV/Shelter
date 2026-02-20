@@ -1,13 +1,13 @@
 package com.example.Shelter.service;
 
-import com.example.Shelter.model.User;
 import com.example.Shelter.model.BotState;
+import com.example.Shelter.model.User;
 import com.example.Shelter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -18,21 +18,17 @@ public class UserService {
 
     @Transactional
     public User getOrCreateUser(Long chatId, org.telegram.telegrambots.meta.api.objects.User telegramUser) {
-        Optional<User> existingUser = userRepository.findById(chatId);
-
-        if (existingUser.isPresent()) {
-            return existingUser.get();
-        }
-
-        User newUser = new User();
-        newUser.setChatId(chatId);
-        newUser.setFirstName(telegramUser.getFirstName());
-        newUser.setLastName(telegramUser.getLastName());
-        newUser.setUsername(telegramUser.getUserName());
-        newUser.setCurrentState(BotState.START);
-        newUser.setRegistrationDate(LocalDateTime.now());
-
-        return userRepository.save(newUser);
+        return userRepository.findByChatId(chatId)
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setChatId(chatId);
+                    newUser.setTelegramId(telegramUser.getId());
+                    newUser.setFirstName(telegramUser.getFirstName());
+                    newUser.setLastName(telegramUser.getLastName());
+                    newUser.setUserName(telegramUser.getUserName());
+                    newUser.setBotState(BotState.STAGE_ZERO);
+                    return userRepository.save(newUser);
+                });
     }
 
     @Transactional
@@ -42,5 +38,48 @@ public class UserService {
 
     public Optional<User> getUser(Long chatId) {
         return userRepository.findById(chatId);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public User updateUser(User user) {
+        if (user.getId() == null || !userRepository.existsById(user.getId())) {
+            return null; // или выбросить исключение
+        }
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User findByChatId(Long chatId) {
+        return userRepository.findByChatId(chatId).orElse(null);
+    }
+
+    public User findByTelegramId(Integer telegramId) {
+        return userRepository.findByTelegramId(telegramId).orElse(null);
+    }
+
+    @Transactional
+    public User updateUserState(Long id, BotState botState) {
+        User user = getUserById(id);
+        if (user != null) {
+            user.setBotState(botState);
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
+    public List<User> getUsersByBotState(BotState botState) {
+        return userRepository.findByBotState(botState);
     }
 }

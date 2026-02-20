@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 import java.util.Optional;
 
@@ -18,9 +19,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Обновляем состояние пользователя
     @Modifying
-    @Query("UPDATE User u SET u.currentState = :newState WHERE u.chatId = :chatId")
+    @Query("UPDATE User u SET u.botState = :newState WHERE u.chatId = :chatId")
     void updateUserState(@Param("chatId") Long chatId, @Param("newState") BotState newState);
 
     // Проверяем существование пользователя по chatId
     boolean existsByChatId(Long chatId);
+
+    Optional<User> findByTelegramId(Integer telegramId);
+
+    List<User> findByBotState(BotState botState);
 }

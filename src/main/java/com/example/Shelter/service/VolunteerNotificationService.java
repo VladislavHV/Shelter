@@ -19,7 +19,7 @@ public class VolunteerNotificationService {
             """,
                 user.getFirstName(),
                 user.getLastName(),
-                user.getUsername(),
+                user.getUserName(),
                 user.getChatId(),
                 daysWithoutReport
         );
@@ -127,16 +127,20 @@ public class VolunteerNotificationService {
 
     // Приватный метод для отправки в чат волонтеров
     private void sendToVolunteerChat(String message) {
-        // Реальная реализация будет отправлять сообщение в Telegram чат волонтеров
-        // Пока просто логируем
         System.out.println("[TO VOLUNTEER CHAT]: " + message);
+    }
 
-        // Пример реальной реализации:
-        // telegramBot.execute(SendMessage.builder()
-        //     .chatId(VOLUNTEER_CHAT_ID)
-        //     .text(message)
-        //     .parseMode("Markdown")
-        //     .build());
+    // Отправка общего уведомления всем волонтерам
+    public void sendToVolunteers(String message) {
+        String formattedMessage = String.format("""
+            *ОБЩЕЕ УВЕДОМЛЕНИЕ ДЛЯ ВОЛОНТЕРОВ*
+            
+            %s
+            
+            [Автоматическое уведомление]
+            """, message);
+
+        sendToVolunteerChat(formattedMessage);
     }
 
 }

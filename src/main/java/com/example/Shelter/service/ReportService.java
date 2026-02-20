@@ -114,7 +114,7 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-    //Обновление отчета
+    // Обновление отчета
     @Transactional
     public Report updateReport(Long reportId, String photoPath, String diet,
                                String wellbeing, String behaviorChanges) {
@@ -130,7 +130,7 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-    //Валидация и проверка отчетов
+    // Валидация и проверка отчетов
     public boolean validateReport(Report report) {
         if (report == null) return false;
 
@@ -142,7 +142,7 @@ public class ReportService {
         return hasPhoto && hasDiet && hasWellbeing && hasBehavior;
     }
 
-    //Волонтер проверяет отчет
+    // Волонтер проверяет отчет
     @Transactional
     public Report reviewReport(Long reportId, ReportStatus status, String feedback) {
         Report report = reportRepository.findById(reportId)
@@ -154,7 +154,7 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-    //Автоматическая проверка в 21:00
+    // Автоматическая проверка в 21:00
     @Scheduled(cron = "0 0 21 * * *")
     @Transactional
     public void checkDailyReports() {
@@ -163,11 +163,11 @@ public class ReportService {
 
         for (Report report : pendingReports) {
             if (report.getReportDate().isBefore(yesterday)) {
-                //Отчет просрочен
+                // Отчет просрочен
                 report.setStatus(ReportStatus.LATE);
                 reportRepository.save(report);
 
-                //Уведомляем волонтера
+                // Уведомляем волонтера
                 notificationService.notifyVolunteerAboutBadReport(
                         report.getUser(),
                         report.getReportDate().toString(),
@@ -177,7 +177,7 @@ public class ReportService {
         }
     }
 
-    //Статистика
+    // Статистика
     public ReportStatistics getStatistics(User user, LocalDate startDate, LocalDate endDate) {
         int total = reportRepository.countByUserAndReportDateBetween(user, startDate, endDate);
         int pending = (int) reportRepository.findByUserAndReportDateBetween(user, startDate, endDate)
@@ -192,7 +192,7 @@ public class ReportService {
         return new ReportStatistics(total, pending, approved);
     }
 
-    //Внутренний класс для статистики
+    // Внутренний класс для статистики
     public static class ReportStatistics {
         private final int totalReports;
         private final int pendingReports;
@@ -210,6 +210,90 @@ public class ReportService {
 
         public double getApprovalRate() {
             return totalReports > 0 ? (double) approvedReports / totalReports * 100 : 0;
+        }
+    }
+
+    // Получить все отчеты
+    public List<Report> getAllReports() {
+        return reportRepository.findAll();
+    }
+
+    // Получить отчет по ID
+    public Report getReportById(Long id) {
+        return reportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Report not found with id: " + id));
+    }
+
+    // Создать отчет
+    public Report createReport(Report report) {
+        return reportRepository.save(report);
+    }
+
+    // Обновить отчет
+    public Report updateReport(Long id, Report reportDetails) {
+        Report report = getReportById(id);
+
+        if (reportDetails.getPhotoPath() != null)
+            report.setPhotoPath(reportDetails.getPhotoPath());
+        if (reportDetails.getDiet() != null)
+            report.setDiet(reportDetails.getDiet());
+        if (reportDetails.getWellbeing() != null)
+            report.setWellbeing(reportDetails.getWellbeing());
+        if (reportDetails.getBehaviorChanges() != null)
+            report.setBehaviorChanges(reportDetails.getBehaviorChanges());
+        if (reportDetails.getStatus() != null)
+            report.setStatus(reportDetails.getStatus());
+
+        return reportRepository.save(report);
+    }
+
+    // Удалить отчет
+    public void deleteReport(Long id) {
+        if (!reportRepository.existsById(id)) {
+            throw new RuntimeException("Report not found with id: " + id);
+        }
+        reportRepository.deleteById(id);
+    }
+
+    // Получить отчеты по ID пользователя
+    public List<Report> getReportsByUserId(Long userId) {
+        return List.of();
+    }
+
+    // Получить отчеты по ID животного
+    public List<Report> getReportsByPetId(Long petId) {
+        return List.of();
+    }
+
+    // Количество отчетов со статусом PENDING
+    public long countPendingReports() {
+        return reportRepository.countByStatus(ReportStatus.PENDING);
+    }
+
+    // Подтвердить отчет
+    public Report approveReport(Long id) {
+        Report report = getReportById(id);
+        report.setStatus(ReportStatus.APPROVED);
+        return reportRepository.save(report);
+    }
+
+    // Отклонить отчет
+    public Report rejectReport(Long id, String rejectionReason) {
+        Report report = getReportById(id);
+        report.setStatus(ReportStatus.NEEDS_IMPROVEMENT);
+        if (rejectionReason != null) {
+            report.setVolunteerFeedback(rejectionReason);
+        }
+        return reportRepository.save(report);
+    }
+
+    // Получить отчеты по статусу
+    public List<Report> getReportsByStatus(String status) {
+        try {
+            ReportStatus reportStatus = ReportStatus.valueOf(status.toUpperCase());
+            return reportRepository.findByStatus(reportStatus);
+        } catch (IllegalArgumentException e) {
+            return List.of();
         }
     }
 
