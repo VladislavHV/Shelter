@@ -116,4 +116,53 @@ public class AdoptionService {
     public List<Adoption> getApprovedAdoptions() {
         return adoptionRepository.findByStatus("APPROVED");
     }
+
+    // Подтвердить усыновление
+    public Adoption approveAdoption(Long id) {
+        Adoption adoption = getAdoptionById(id);
+        adoption.setStatus("APPROVED");
+        return adoptionRepository.save(adoption);
+    }
+
+    // Отклонить усыновление
+    public Adoption rejectAdoption(Long id) {
+        Adoption adoption = getAdoptionById(id);
+        adoption.setStatus("REJECTED");
+        return adoptionRepository.save(adoption);
+    }
+
+    // Завершить усыновление
+    public Adoption completeAdoption(Long id) {
+        Adoption adoption = getAdoptionById(id);
+        adoption.setStatus("COMPLETED");
+        return adoptionRepository.save(adoption);
+    }
+
+    // Получить заявки по ID животного
+    public List<Adoption> getAdoptionsByPetId(Long petId) {
+        return adoptionRepository.findByPetId(petId);
+    }
+
+    // Количество заявок со статусом PENDING
+    public long countPendingAdoptions() {
+        return adoptionRepository.countByStatus("PENDING");
+    }
+
+    // Обновить всю заявку
+    public Adoption updateAdoption(Long id, Long userId, Long petId,
+                                   String notes, String status) {
+        Adoption adoption = getAdoptionById(id);
+
+        if (userId != null) adoption.setUserId(userId);
+        if (petId != null) {
+            Pet pet = petRepository.findById(petId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Питомец", "id", petId));
+            adoption.setPet(pet);
+        }
+        if (notes != null) adoption.setNotes(notes);
+        if (status != null) adoption.setStatus(status);
+
+        return adoptionRepository.save(adoption);
+    }
+
 }

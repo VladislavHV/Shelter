@@ -130,4 +130,17 @@ public class VolunteerNotificationService {
         System.out.println("[TO VOLUNTEER CHAT]: " + message);
     }
 
+    // Отправка общего уведомления всем волонтерам
+    public void sendToVolunteers(String message) {
+        String formattedMessage = String.format("""
+            *ОБЩЕЕ УВЕДОМЛЕНИЕ ДЛЯ ВОЛОНТЕРОВ*
+            
+            %s
+            
+            [Автоматическое уведомление]
+            """, message);
+
+        sendToVolunteerChat(formattedMessage);
+    }
+
 }

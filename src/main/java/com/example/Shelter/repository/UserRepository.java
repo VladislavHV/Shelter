@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 import java.util.Optional;
 
@@ -23,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Проверяем существование пользователя по chatId
     boolean existsByChatId(Long chatId);
+
+    Optional<User> findByTelegramId(Integer telegramId);
+
+    List<User> findByBotState(BotState botState);
 }

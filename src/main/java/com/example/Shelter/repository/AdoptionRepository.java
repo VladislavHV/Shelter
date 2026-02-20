@@ -16,4 +16,7 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
     List<Adoption> findByPetId(Long petId);
 
     boolean existsByPetIdAndStatus(Long petId, String status);
+
+    long countByStatus(String status);
+
 }
