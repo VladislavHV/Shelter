@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/volunteer")
-@Tag(name = "Волонтеры", description = "API для волонтерских функций")
+@RequestMapping("/volunteer")
+@Tag(name = "Волонтеры", description = "Функции для волонтеров")
 public class VolunteerController {
 
     @Autowired
@@ -27,14 +27,14 @@ public class VolunteerController {
     @Autowired
     private VolunteerNotificationService notificationService;
 
-    @Operation(summary = "Получить заявки на усыновление, требующие внимания")
+    @Operation(summary = "Получить ожидающие заявки на усыновление")
     @GetMapping("/adoptions/pending")
     public ResponseEntity<List<Adoption>> getPendingAdoptions() {
         List<Adoption> adoptions = adoptionService.getPendingAdoptions();
         return ResponseEntity.ok(adoptions);
     }
 
-    @Operation(summary = "Получить отчеты, требующие проверки")
+    @Operation(summary = "Получить ожидающие проверки отчеты")
     @GetMapping("/reports/pending")
     public ResponseEntity<List<Report>> getPendingReports() {
         List<Report> reports = reportService.getPendingReports();
@@ -64,3 +64,4 @@ public class VolunteerController {
         return ResponseEntity.ok(stats);
     }
 }
+
