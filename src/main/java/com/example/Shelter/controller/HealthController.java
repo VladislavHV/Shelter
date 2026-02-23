@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/health")
-@Tag(name = "Здоровье системы", description = "API для мониторинга состояния приложения")
+@RequestMapping("/health")  // убрал /api/
+@Tag(name = "Здоровье системы", description = "Мониторинг состояния приложения")
 public class HealthController {
 
     @Autowired
@@ -37,7 +37,6 @@ public class HealthController {
         health.put("timestamp", LocalDateTime.now());
         health.put("service", "Shelter Bot Application");
 
-        // Проверка БД
         try {
             jdbcTemplate.queryForObject("SELECT 1", Integer.class);
             health.put("database", "CONNECTED");
@@ -46,7 +45,6 @@ public class HealthController {
             health.put("databaseError", e.getMessage());
         }
 
-        // Состояния приложения
         health.put("livenessState", availability.getLivenessState());
         health.put("readinessState", availability.getReadinessState());
 
@@ -71,7 +69,7 @@ public class HealthController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Изменить состояние готовности (только для админов)")
+    @Operation(summary = "Изменить состояние готовности")
     @PostMapping("/readiness/{state}")
     public ResponseEntity<String> changeReadinessState(@PathVariable String state) {
         if ("REFUSING_TRAFFIC".equalsIgnoreCase(state)) {
