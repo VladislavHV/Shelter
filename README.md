@@ -29,10 +29,12 @@ cd Shelter
 
 ### 2. Настройка базы данных
 
+```bash
 spring.datasource.url=jdbc:postgresql://localhost:5432/shelter_db
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=update
+```
 
 ### 3. Сборка и запуск
 
