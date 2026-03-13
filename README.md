@@ -49,6 +49,7 @@ http://localhost:8080/swagger-ui/index.html
 
 ## Структура проекта
 
+```bash
 com.example.Shelter/
 ├── controller/          # REST контроллеры
 ├── service/             # Бизнес-логика
@@ -58,6 +59,7 @@ com.example.Shelter/
 ├── config/              # Конфигурации (Swagger)
 ├── bot/                 # Бот
 └── ShelterApplication.java
+```
 
 ## Тестирование API
 
