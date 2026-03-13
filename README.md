@@ -38,8 +38,10 @@ spring.jpa.hibernate.ddl-auto=update
 
 ### 3. Сборка и запуск
 
+```bash
 ./mvnw clean install
 ./mvnw spring-boot:run
+```
 
 ## API документация (Swagger)
 
