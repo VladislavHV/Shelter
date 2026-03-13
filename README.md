@@ -71,7 +71,7 @@ Swagger UI — http://localhost:8080/swagger-ui/index.html
 ## Основные эндпоинты
 
 ```bash
-Метод	URL	Описание
+Метод	  URL	            Описание
 GET	      /pets	            Все питомцы
 GET	      /pets/{id}	    Питомец по ID
 POST      /pets	            Добавить питомца
