@@ -63,11 +63,14 @@ com.example.Shelter/
 
 ## Тестирование API
 
+```bash
 curl -X GET http://localhost:8080/pets
 Swagger UI — http://localhost:8080/swagger-ui/index.html
+```
 
 ## Основные эндпоинты
 
+```bash
 Метод	URL	Описание
 GET	/pets	Все питомцы
 GET	/pets/{id}	Питомец по ID
@@ -81,9 +84,11 @@ GET	/users	Все пользователи
 POST	/reports	Создать отчет
 GET	/volunteer/stats	Статистика для волонтера
 GET	/health	Проверка состояния приложения
+```
 
 ## Сборка и зависимости
 
+```bash
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -110,6 +115,7 @@ GET	/health	Проверка состояния приложения
         <version>6.9.7.1</version>
     </dependency>
 </dependencies>
+```
 
 ## Разработка
 
