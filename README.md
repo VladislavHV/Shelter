@@ -72,18 +72,18 @@ Swagger UI — http://localhost:8080/swagger-ui/index.html
 
 ```bash
 Метод	URL	Описание
-GET	/pets	Все питомцы
-GET	/pets/{id}	Питомец по ID
-POST	/pets	Добавить питомца
-PUT	/pets/{id}	Обновить питомца
-DELETE	/pets/{id}	Удалить питомца
-GET	/pets/available	Доступные питомцы
-GET	/adoptions	Все заявки
-POST	/adoptions	Создать заявку
-GET	/users	Все пользователи
-POST	/reports	Создать отчет
-GET	/volunteer/stats	Статистика для волонтера
-GET	/health	Проверка состояния приложения
+GET	      /pets	            Все питомцы
+GET	      /pets/{id}	    Питомец по ID
+POST      /pets	            Добавить питомца
+PUT	      /pets/{id}	    Обновить питомца
+DELETE	  /pets/{id}	    Удалить питомца
+GET	      /pets/available	Доступные питомцы
+GET	      /adoptions	    Все заявки
+POST	  /adoptions	    Создать заявку
+GET	      /users	        Все пользователи
+POST	  /reports	        Создать отчет
+GET	      /volunteer/stats	Статистика для волонтера
+GET	      /health	        Проверка состояния приложения
 ```
 
 ## Сборка и зависимости
@@ -119,12 +119,12 @@ GET	/health	Проверка состояния приложения
 
 ## Разработка
 
-# Требования
+### Требования
 Java 17+
 Maven 3.8+
 PostgreSQL (опционально)
 
-# Рекомендации
+### Рекомендации
 Перед коммитом форматируй код
 Используй осмысленные названия коммитов
 Добавляй JavaDoc для новых методов
